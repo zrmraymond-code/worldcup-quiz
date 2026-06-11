@@ -3,51 +3,42 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>🏆 2026 世界杯竞猜</title>
+<title>🏆 2026 AFC 世界杯竞猜</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Helvetica Neue',sans-serif;background:#0c0b09;color:#ede7df;min-height:100vh;-webkit-font-smoothing:antialiased}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Helvetica Neue',sans-serif;background:#0c0b09;color:#ede7df}
 .header{background:linear-gradient(135deg,#12100e,#1a1510);padding:20px 16px;border-bottom:1px solid #1e1c18;text-align:center}
 .header-row{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:4px}
 .header-logo{width:52px;height:52px;border-radius:12px;border:2px solid #e89820;object-fit:cover}
 .header h1{font-size:22px;font-weight:800;background:linear-gradient(135deg,#e89820,#f5b840);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .header p{font-size:13px;color:#7a7268}
-
 .tabs{display:flex;border-bottom:1px solid #1e1c18;background:#100e0c;position:sticky;top:0;z-index:10;overflow-x:auto}
 .tab{flex:1 0 auto;text-align:center;padding:12px 10px;font-size:13px;color:#7a7268;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap}
 .tab.active{color:#e89820;border-bottom-color:#e89820}
-
 .content{padding:12px;max-width:640px;margin:0 auto}
-
 .date-bar{background:#1e1c18;border-radius:8px;padding:10px 14px;margin:12px 0 8px;display:flex;align-items:center;gap:10px}
 .date-text{font-size:14px;font-weight:600;color:#ede7df}
-.date-today{background:#e89820;color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;margin-left:4px}
 .match-count{font-size:11px;color:#5a5248;margin-left:auto}
-
-.match-card{background:#12100e;border-radius:12px;padding:14px;margin-bottom:8px;border-left:3px solid transparent}
+.match-card{background:#12100e;border-radius:12px;padding:14px;margin-bottom:8px}
 .match-card.past{opacity:.6}
 .match-card.past .pick-row,.match-card.past .score-row{display:none}
 .match-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.match-meta{font-size:11px;color:#5a5248;display:flex;align-items:center;gap:6px}
-.match-dot{width:6px;height:6px;border-radius:50%;background:#e89820}
+.match-meta{font-size:11px;color:#5a5248}
 .match-venue{font-size:11px;color:#5a5248}
-
 .match-teams{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .team-block{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
 .team-flag{font-size:28px}
-.team-name{font-size:14px;font-weight:600;color:#ede7df;text-align:center}
+.team-name{font-size:14px;font-weight:600;color:#ede7df}
 .vs-divider{font-size:13px;color:#5a5248;margin:0 12px;flex-shrink:0}
-
 .pick-row{display:flex;gap:6px;margin-bottom:6px}
 .pick-btn{flex:1;padding:8px;border:1px solid #1e1c18;border-radius:8px;background:transparent;color:#7a7268;font-size:12px;cursor:pointer;text-align:center}
 .pick-btn.selected{background:rgba(232,152,32,.18);border-color:#e89820;color:#e89820;font-weight:600}
 .score-row{display:flex;align-items:center;justify-content:center;gap:6px}
 .score-input{width:38px;height:34px;background:#1e1c18;border:1px solid #2a2824;border-radius:6px;color:#ede7df;text-align:center;font-size:15px}
-.score-input:focus{outline:1px solid #e89820;border-color:#e89820}
-.score-sep{font-size:13px;color:#5a5248;margin:0 2px}
-
-.result-badge{background:rgba(60,184,120,.15);border:1px solid #3cb878;color:#3cb878;padding:4px 10px;border-radius:6px;font-size:14px;font-weight:600;text-align:center;margin-top:6px}
-
+.score-input:focus{outline:1px solid #e89820}
+.score-sep{font-size:13px;color:#5a5248}
+.result-badge{background:rgba(60,184,120,.15);border:1px solid #3cb878;color:#3cb878;padding:4px 10px;border-radius:6px;font-size:14px;font-weight:600;text-align:center}
 .data-section{margin-bottom:16px}
 .data-title{font-size:16px;font-weight:700;color:#e89820;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #1e1c18}
 .data-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -58,148 +49,149 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Helv
 .group-card{background:#12100e;border-radius:8px;padding:8px}
 .group-label{font-size:12px;font-weight:700;color:#e89820;margin-bottom:4px}
 .group-team{font-size:10px;color:#b8b0a4;display:block;line-height:1.6}
-
 .name-bar{padding:8px 0;display:flex;gap:8px;margin-bottom:8px}
 .name-input{flex:1;background:#1e1c18;border:1px solid #2a2824;border-radius:8px;padding:10px;color:#ede7df;font-size:14px}
 .name-save{background:#e89820;color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer;flex-shrink:0}
-.name-show{font-size:14px;color:#ede7df;display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.name-show{font-size:14px;display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
 .name-edit{font-size:12px;color:#e89820;cursor:pointer}
-
 .stats-row{display:flex;gap:8px;margin-bottom:12px}
 .stat-card{flex:1;background:#12100e;border-radius:10px;padding:12px 8px;text-align:center}
 .stat-num{font-size:22px;font-weight:700;color:#e89820;display:block}
 .stat-label{font-size:11px;color:#7a7268;margin-top:3px}
-
 .rank-item{display:flex;align-items:center;background:#12100e;border-radius:10px;padding:12px;margin-bottom:6px;gap:10px}
 .rank-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:#1e1c18;color:#e89820;flex-shrink:0}
-.rank-num.r1{background:linear-gradient(135deg,#e89820,#c47a10);color:#fff}
+.rank-num.r1{background:linear-gradient(135deg,#e89820,#c47a10);color:#fff}.rank-num.r2{background:#2a2824;color:#ede7df}.rank-num.r3{background:#1e1c18;color:#b8b0a4}
 .rank-name{flex:1;font-size:14px;font-weight:600}
 .rank-score{font-size:15px;font-weight:700;color:#e89820}
-
 .pick-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #1e1c18;font-size:13px}
-.pick-match{flex:1;color:#ede7df}
-.pick-guess{color:#e89820;font-weight:600;text-align:right}
-.status-win{color:#3cb878;font-size:11px;margin-left:4px}
-.status-pending{color:#5a5248;font-size:11px;margin-left:4px}
-
+.pick-match{flex:1;color:#ede7df}.pick-guess{color:#e89820;font-weight:600;text-align:right}
+.status-win{color:#3cb878;font-size:11px}.status-pending{color:#5a5248;font-size:11px}
 .empty-state{text-align:center;padding:50px 20px;color:#7a7268;font-size:14px}
-.toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:#12100e;color:#ede7df;padding:10px 20px;border-radius:8px;font-size:13px;z-index:100;border:1px solid #e89820;opacity:0;pointer-events:none;transition:opacity .3s}
-.toast.show{opacity:1}
+.loading{text-align:center;padding:30px;color:#7a7268}
+#toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:#12100e;color:#ede7df;padding:10px 20px;border-radius:8px;font-size:13px;z-index:100;border:1px solid #e89820;opacity:0;pointer-events:none;transition:opacity .3s}
+#toast.show{opacity:1}
 </style>
 </head>
 <body>
 <div class="header">
   <div class="header-row">
     <img src="Pictures/2026-06-11%2021.17.40.jpg" class="header-logo" onerror="this.style.display='none'">
-    <div><h1>🏆 2026 世界杯竞猜</h1><p>FIFA World Cup 26 · 美加墨</p></div>
+    <div><h1>🏆 2026 AFC 世界杯竞猜</h1><p>FIFA World Cup 26 · 美加墨</p></div>
   </div>
 </div>
-
 <div class="tabs">
-  <div class="tab active" data-tab="quiz" onclick="S('quiz')">📋 竞猜</div>
-  <div class="tab" data-tab="results" onclick="S('results')">📊 战报</div>
-  <div class="tab" data-tab="data" onclick="S('data')">📖 资料</div>
-  <div class="tab" data-tab="my" onclick="S('my')">🎯 我的</div>
-  <div class="tab" data-tab="rank" onclick="S('rank')">🏅 排行</div>
+  <div class="tab active" onclick="S('quiz')">📋 竞猜</div>
+  <div class="tab" onclick="S('results')">📊 战报</div>
+  <div class="tab" onclick="S('data')">📖 资料</div>
+  <div class="tab" onclick="S('my')">🎯 我的</div>
+  <div class="tab" onclick="S('rank')">🏅 排行</div>
 </div>
-
-<div id="cq" class="content"></div>
-<div id="cr" class="content" style="display:none"></div>
-<div id="cd" class="content" style="display:none"></div>
-<div id="cm" class="content" style="display:none"></div>
-<div id="ck" class="content" style="display:none"></div>
-<div id="toast" class="toast"></div>
+<div id="cq" class="content"></div><div id="cr" class="content" style="display:none"></div>
+<div id="cd" class="content" style="display:none"></div><div id="cm" class="content" style="display:none"></div>
+<div id="ck" class="content" style="display:none"></div><div id="toast" class="toast"></div>
 
 <script>
-const SK='wc26_picks',NK='wc26_name',RK='wc26_results'
-let M=[],P={},R={},N=localStorage.getItem(NK)||''
+const SB = supabase.createClient(
+  'https://smnsjyqtxywptqgkwvow.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNtbnNqeXF0eHl3cHRxZ2t3dm93Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNzUxMDYsImV4cCI6MjA5Njc1MTEwNn0.R6gaKQvlZx1D0PZZv1h0OFckdNIbg0Gua341POzuYTw',
+  {auth:{persistSession:false}}
+)
+const NK='wc26_name';let M=[],P={},R={},N=localStorage.getItem(NK)||'',rk=[]
+const T=()=>new Date().toISOString().slice(0,10)
+const D=d=>{const m=['日','一','二','三','四','五','六'];const p=d.split('-');return `${+p[1]}月${+p[2]}日周${m[+new Date(d).getDay()]}`}
 
 async function I(){
- try{const r=await fetch('matches.json?'+Date.now());M=await r.json()}catch(e){cq.innerHTML='<div class="empty-state">加载失败</div>';return}
- try{P=JSON.parse(localStorage.getItem(SK))||{}}catch{P={}}
- try{R=JSON.parse(localStorage.getItem(RK))||{}}catch{R={}}
- Q()
+  try{const r=await fetch('matches.json?'+Date.now());M=await r.json()}catch{}
+  try{R=JSON.parse(localStorage.getItem('wc26_r'))||{}}catch{}
+  if(N)await LP();Q()
 }
-
-const T=()=>new Date().toISOString().slice(0,10)
-const D=d=>{const m={1:'一',2:'二',3:'三',4:'四',5:'五',6:'六'};const p=d.split('-');return `${+p[1]}月${+p[2]}日 周${m[new Date(d).getDay()]}`}
-
+async function LP(){
+  const {data}=await SB.from('picks').select('*').eq('user_name',N)
+  if(data){P={};data.forEach(p=>{P[p.match_id]={result:p.result,homeScore:p.home_score,awayScore:p.away_score}})}
+}
+async function saveP(mid,r,hs,as){
+  await SB.from('picks').upsert({user_name:N,match_id:mid,result:r,home_score:hs,away_score:as},{onConflict:'user_name,match_id',ignoreDuplicates:false})
+  P[mid]={result:r,homeScore:hs,awayScore:as};refresh()
+}
+async function loadRK(){
+  const{data}=await SB.from('picks').select('user_name,match_id,result,home_score,away_score')
+  if(!data){rk=[];return}
+  const s={};data.forEach(p=>{if(!s[p.user_name])s[p.user_name]={p:0,c:0,e:0};s[p.user_name].p++;const r=R[p.match_id];if(r){const cr=(p.result==='home'&&r.home>r.away)||(p.result==='away'&&r.home<r.away)||(p.result==='draw'&&r.home===r.away);const cs=p.home_score==r.home&&p.away_score==r.away;if(cs)s[p.user_name].e++;else if(cr)s[p.user_name].c++}})
+  rk=Object.entries(s).map(([n,v])=>({name:n,points:v.c+v.e*3})).sort((a,b)=>b.points-a.points)
+}
+function refresh(){Q();MY();RA()}
 function S(t){
- document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'))
- document.querySelector(`[data-tab="${t}"]`).classList.add('active')
- cq.style.display=cr.style.display=cd.style.display=cm.style.display=ck.style.display='none'
- document.getElementById(t==='quiz'?'cq':t==='results'?'cr':t==='data'?'cd':t==='my'?'cm':'ck').style.display='block'
- if(t==='quiz')Q();if(t==='results')RE();if(t==='data')DA();if(t==='my')MY();if(t==='rank')RA()
+  document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'))
+  const ids={quiz:0,results:1,data:2,my:3,rank:4},divs={quiz:'cq',results:'cr',data:'cd',my:'cm',rank:'ck'}
+  document.querySelectorAll('.tab')[ids[t]].classList.add('active')
+  Object.values(divs).forEach(id=>document.getElementById(id).style.display='none')
+  document.getElementById(divs[t]).style.display='block'
+  if(t==='quiz')Q();if(t==='results')RE();if(t==='data')DA();if(t==='my')MY();if(t==='rank')RA()
 }
-
 function Q(){
- if(!N){cq.innerHTML=`<div class="name-bar"><input class="name-input" id="ni" placeholder="输入你的昵称" maxlength="15"><button class="name-save" onclick="SN()">保存</button></div>`+QD();return}
- cq.innerHTML=`<div class="name-show">👋 <b>${N}</b> <span class="name-edit" onclick="N='';localStorage.removeItem(NK);Q()">修改</span></div>`+QD()
+  if(!N){cq.innerHTML=NQ();return}
+  cq.innerHTML=`<div class="name-show">👋 <b>${N}</b> <span class="name-edit" onclick="N='';localStorage.removeItem(NK);Q()">[改]</span></div>`+QD()
 }
-function SN(){const v=document.getElementById('ni').value.trim();if(!v){TT('请输入昵称');return}N=v;localStorage.setItem(NK,v);Q()}
+function NQ(){return`<div class="name-bar"><input class="name-input" id="ni" placeholder="你的昵称" maxlength="15"><button class="name-save" onclick="SN()">保存</button></div>`+QD()}
+function SN(){const v=document.getElementById('ni').value.trim();if(!v)return;N=v;localStorage.setItem(NK,v);LP().then(()=>Q())}
 function TT(m){const e=document.getElementById('toast');e.textContent=m;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2000)}
-
 function QD(){
- const t=T();const d={};let f=false
- M.forEach(m=>{if(m.date<t)return;f=true;if(!d[m.date])d[m.date]=[];d[m.date].push(m)})
- if(!f)return'<div class="empty-state">所有比赛已结束</div>'
- let h=''
- Object.keys(d).sort().forEach(dt=>{
-  h+=`<div class="date-bar"><span class="date-text">${D(dt)}</span>${dt===t?'<span class="date-today">今天</span>':''}<span class="match-count">${d[dt].length}场</span></div>`
-  d[dt].forEach(m=>h+=MC(m,false))
- })
- return h
+  const t=T(),d={};let f=false
+  M.forEach(m=>{if(m.date<t)return;f=true;(d[m.date]=d[m.date]||[]).push(m)})
+  if(!f)return'<div class="empty-state">所有比赛已结束</div>'
+  return Object.keys(d).sort().map(dt=>{
+    let h=`<div class="date-bar"><span class="date-text">${D(dt)}</span><span class="match-count">${d[dt].length}场</span></div>`
+    d[dt].forEach(m=>h+=`<div class="match-card"><div class="match-top"><span class="match-meta">${m.stage}·${m.group}</span><span class="match-venue">${m.city}</span></div><div class="match-teams"><div class="team-block"><span class="team-flag">${m.homeFlag}</span><span class="team-name">${m.home}</span></div><span class="vs-divider">VS</span><div class="team-block"><span class="team-flag">${m.awayFlag}</span><span class="team-name">${m.away}</span></div></div>${pkr(m)}</div>`)
+    return h
+  }).join('')
 }
-
-function MC(m,isR){
- const hs=R[m.id]?R[m.id].home:'',as=R[m.id]?R[m.id].away:''
- const p=P[m.id]||{}
- if(isR)return`<div class="match-card past"><div class="match-top"><span class="match-meta"><span class="match-dot"></span>${m.stage} · ${m.group||''}</span><span class="match-venue">${m.city||''}</span></div><div class="match-teams"><div class="team-block"><span class="team-flag">${m.homeFlag}</span><span class="team-name">${m.home}</span></div><div class="result-badge">${hs}:${as}</div><div class="team-block"><span class="team-flag">${m.awayFlag}</span><span class="team-name">${m.away}</span></div></div></div>`
-
- const sel=p.result||''
- return`<div class="match-card"><div class="match-top"><span class="match-meta"><span class="match-dot"></span>${m.stage} · ${m.group}</span><span class="match-venue">${m.city}</span></div><div class="match-teams"><div class="team-block"><span class="team-flag">${m.homeFlag}</span><span class="team-name">${m.home}</span></div><span class="vs-divider">VS</span><div class="team-block"><span class="team-flag">${m.awayFlag}</span><span class="team-name">${m.away}</span></div></div><div class="pick-row"><div class="pick-btn${sel==='home'?' selected':''}" onclick="PK(${m.id},'home')">${m.home} 胜</div><div class="pick-btn${sel==='draw'?' selected':''}" onclick="PK(${m.id},'draw')">平</div><div class="pick-btn${sel==='away'?' selected':''}" onclick="PK(${m.id},'away')">${m.away} 胜</div></div><div class="score-row"><input class="score-input" type="number" min="0" max="20" value="${p.homeScore||''}" onchange="PS(${m.id},'home',this.value)" placeholder="0"><span class="score-sep">:</span><input class="score-input" type="number" min="0" max="20" value="${p.awayScore||''}" onchange="PS(${m.id},'away',this.value)" placeholder="0"></div></div>`
+function PK(id,r){const p=P[id]||{};p.result=r;saveP(id,r,p.homeScore||0,p.awayScore||0);refresh()}
+function PS(id,s,v){const val=v===''?0:parseInt(v)||0;const p=P[id]||{};p[s==='home'?'homeScore':'awayScore']=val;if(p.homeScore&&p.awayScore){p.result=p.homeScore>p.awayScore?'home':p.homeScore<p.awayScore?'away':'draw'}saveP(id,p.result||'draw',p.homeScore||0,p.awayScore||0)}
+function pkr(m){
+  const p=P[m.id]||{},s=p.result||''
+  return`<div class="pick-row"><div class="pick-btn${s==='home'?' selected':''}" onclick="PK(${m.id},'home')">${m.home}胜</div><div class="pick-btn${s==='draw'?' selected':''}" onclick="PK(${m.id},'draw')">平</div><div class="pick-btn${s==='away'?' selected':''}" onclick="PK(${m.id},'away')">${m.away}胜</div></div><div class="score-row"><input class="score-input" type="number" min="0" max="20" value="${p.homeScore||''}" onchange="PS(${m.id},'home',this.value)" placeholder="0"><span class="score-sep">:</span><input class="score-input" type="number" min="0" max="20" value="${p.awayScore||''}" onchange="PS(${m.id},'away',this.value)" placeholder="0"></div>`
 }
-
-function PK(id,r){const p=P[id]||{};p.result=r;P[id]=p;localStorage.setItem(SK,JSON.stringify(P));Q()}
-function PS(id,s,v){const p=P[id]||{};const val=v===''?'':parseInt(v)||0;p[s==='home'?'homeScore':'awayScore']=val;if(p.homeScore!==''&&p.awayScore!==''){if(p.homeScore>p.awayScore)p.result='home';else if(p.homeScore<p.awayScore)p.result='away';else p.result='draw'}P[id]=p;localStorage.setItem(SK,JSON.stringify(P))}
 
 function RE(){
- const t=T();const d={}
- M.forEach(m=>{if(m.date>=t)return;if(!d[m.date])d[m.date]=[];d[m.date].push(m)})
- if(!Object.keys(d).length){cr.innerHTML='<div class="empty-state">暂无已完成的比赛</div>';return}
- let h=''
- Object.keys(d).sort().reverse().forEach(dt=>{
-  h+=`<div class="date-bar"><span class="date-text">${D(dt)}</span><span class="match-count">${d[dt].length}场</span></div>`
-  d[dt].forEach(m=>h+=MC(m,true))
- })
- cr.innerHTML=h
+  const t=T(),d={}
+  M.forEach(m=>{if(m.date>=t)return;(d[m.date]=d[m.date]||[]).push(m)})
+  const keys=Object.keys(d)
+  if(!keys.length){cr.innerHTML='<div class="empty-state">无已完成比赛</div>';return}
+  cr.innerHTML=keys.sort().reverse().map(dt=>{
+    let h=`<div class="date-bar"><span class="date-text">${D(dt)}</span><span class="match-count">${d[dt].length}场</span></div>`
+    d[dt].forEach(m=>{const r=R[m.id];h+=`<div class="match-card past"><div class="match-top"><span class="match-meta">${m.stage}·${m.group}</span></div><div class="match-teams"><div class="team-block"><span class="team-flag">${m.homeFlag}</span><span class="team-name">${m.home}</span></div><div class="result-badge">${r?r.home+':'+r.away:'--:--'}</div><div class="team-block"><span class="team-flag">${m.awayFlag}</span><span class="team-name">${m.away}</span></div></div></div>`})
+    return h
+  }).join('')
 }
 
 function DA(){
- const g=[['A',['🇲🇽墨西哥','🇰🇷韩国','🇨🇿捷克','🇿🇦南非']],['B',['🇨🇦加拿大','🇨🇭瑞士','🇧🇦波黑','🇶🇦卡塔尔']],['C',['🇧🇷巴西','🇲🇦摩洛哥','🇭🇹海地','🏴󠁧󠁢󠁳󠁣󠁴󠁿苏格兰']],['D',['🇺🇸美国','🇵🇾巴拉圭','🇹🇷土耳其','🇦🇺澳大利亚']],['E',['🇩🇪德国','🇪🇨厄瓜多尔','🇨🇮科特迪瓦','🇨🇼库拉索']],['F',['🇳🇱荷兰','🇯🇵日本','🇸🇪瑞典','🇹🇳突尼斯']],['G',['🇮🇹意大利','🇧🇪比利时','🇮🇷伊朗','🇳🇴挪威(外卡)']],['H',['🇪🇸西班牙','🇺🇦乌克兰','🇨🇺古巴','🇸🇷苏里南']],['I',['🇫🇷法国','🇸🇳塞内加尔','🇬🇳几内亚','🇧🇫布基纳法索']],['J',['🇦🇷阿根廷','🇺🇾乌拉圭','🇧🇴玻利维亚','🇨🇱智利']],['K',['🇵🇹葡萄牙','🇷🇸塞尔维亚','🇬🇷希腊','🇲🇱马里']],['L',['🏴󠁧󠁢󠁥󠁮󠁧󠁿英格兰','🇨🇴哥伦比亚','🇪🇬埃及','🇳🇿新西兰']]]
- let h='<div class="data-section"><div class="data-title">📋 12个小组</div><div class="group-list">'
- g.forEach(x=>{h+=`<div class="group-card"><div class="group-label">Group ${x[0]}</div>`;x[1].forEach(t=>h+=`<span class="group-team">${t}</span>`);h+='</div>'})
- h+=`</div></div><div class="data-section"><div class="data-title">📅 赛程概况</div><div class="data-grid"><div class="data-card"><h4>小组赛</h4><p>6月12日-6月24日 · 48场</p></div><div class="data-card"><h4>淘汰赛</h4><p>6月28日起 · 32强→决赛</p></div><div class="data-card"><h4>决赛</h4><p>7月19日 · 纽约/新泽西</p></div><div class="data-card"><h4>总规模</h4><p>104场 · 48支球队</p></div></div></div><div class="data-section"><div class="data-title">🏅 积分规则</div><div class="data-card"><p>猜对胜负平 <b style="color:#e89820">+1分</b><br>猜对比分 <b style="color:#e89820">+3分</b></p></div></div>`
- cd.innerHTML=h
+  const g=[['A','🇲🇽墨西哥,🇰🇷韩国,🇨🇿捷克,🇿🇦南非'],['B','🇨🇦加拿大,🇨🇭瑞士,🇧🇦波黑,🇶🇦卡塔尔'],['C','🇧🇷巴西,🇲🇦摩洛哥,🇭🇹海地,🏴󠁧󠁢󠁳󠁣󠁴󠁿苏格兰'],['D','🇺🇸美国,🇵🇾巴拉圭,🇹🇷土耳其,🇦🇺澳大利亚'],['E','🇩🇪德国,🇪🇨厄瓜多尔,🇨🇮科特迪瓦,🇨🇼库拉索'],['F','🇳🇱荷兰,🇯🇵日本,🇸🇪瑞典,🇹🇳突尼斯'],['G','🇮🇹意大利,🇧🇪比利时,🇮🇷伊朗,🇳🇴挪威'],['H','🇪🇸西班牙,🇺🇦乌克兰,🇨🇺古巴,🇸🇷苏里南'],['I','🇫🇷法国,🇸🇳塞内加尔,🇬🇳几内亚,🇧🇫布基纳法索'],['J','🇦🇷阿根廷,🇺🇾乌拉圭,🇧🇴玻利维亚,🇨🇱智利'],['K','🇵🇹葡萄牙,🇷🇸塞尔维亚,🇬🇷希腊,🇲🇱马里'],['L','🏴󠁧󠁢󠁥󠁮󠁧󠁿英格兰,🇨🇴哥伦比亚,🇪🇬埃及,🇳🇿新西兰']]
+  let h='<div class="data-section"><div class="data-title">📋12个小组</div><div class="group-list">'
+  g.forEach(x=>{h+=`<div class="group-card"><div class="group-label">Group ${x[0]}</div>`+x[1].split(',').map(t=>`<span class="group-team">${t}</span>`).join('')+'</div>'})
+  h+=`</div></div><div class="data-section"><div class="data-title">📅赛程</div><div class="data-grid"><div class="data-card"><h4>小组赛</h4><p>6月12-24日·48场</p></div><div class="data-card"><h4>淘汰赛</h4><p>6月28日起·32→决赛</p></div><div class="data-card"><h4>决赛</h4><p>7月19日·纽约</p></div><div class="data-card"><h4>总规模</h4><p>104场·48队</p></div></div></div><div class="data-section"><div class="data-title">🏅积分规则</div><div class="data-card"><p>猜对胜平负<b style="color:#e89820">+1分</b><br>猜对比分<b style="color:#e89820">+3分</b></p></div></div>`
+  cd.innerHTML=h
 }
 
 function MY(){
- if(!N){cm.innerHTML='<div class="empty-state">请先在竞猜页面输入昵称</div>';return}
- const t=T();const pm=M.filter(m=>P[m.id]).sort((a,b)=>b.date.localeCompare(a.date))
- if(!pm.length){cm.innerHTML='<div class="empty-state">你还没有竞猜</div>';return}
- const pts=Object.keys(P).length
- let h=`<div class="name-show">👋 <b>${N}</b></div><div class="stats-row"><div class="stat-card"><span class="stat-num">${pm.length}</span><span class="stat-label">已猜</span></div><div class="stat-card"><span class="stat-num">${pts}</span><span class="stat-label">得分(估)</span></div></div><div class="date-bar"><span class="date-text">竞猜记录</span></div>`
- pm.forEach(m=>{const p=P[m.id];const isP=m.date<t;const r=R[m.id];let s='';if(isP&&r){const cr=(p.result==='home'&&r.home>r.away)||(p.result==='away'&&r.home<r.away)||(p.result==='draw'&&r.home===r.away);const cs=p.homeScore==r.home&&p.awayScore==r.away;s=cs?'<span class="status-win">+3</span>':cr?'<span class="status-win">+1</span>':'<span class="status-lose" style="color:#d45040">+0</span>'}else s='<span class="status-pending">待定</span>';h+=`<div class="pick-item"><span class="pick-match">${m.homeFlag} ${m.home} vs ${m.away} ${m.awayFlag}<br><small style="color:#5a5248;font-size:11px">${m.date} · ${m.group}</small></span><span class="pick-guess">${p.result==='home'?m.home:p.result==='away'?m.away:'平'}${p.homeScore!==''?' '+p.homeScore+':'+p.awayScore:''}${s}</span></div>`})
- cm.innerHTML=h
+  if(!N){cm.innerHTML='<div class="empty-state">请先输入昵称</div>';return}
+  const pm=M.filter(m=>P[m.id]).sort((a,b)=>b.date.localeCompare(a.date))
+  if(!pm.length){cm.innerHTML=`<div class="empty-state">还没竞猜</div>`;return}
+  let pts=0,cc=0
+  Object.keys(P).forEach(mid=>{const p=P[mid];const r=R[mid];if(r&&p.result){const cr=(p.result==='home'&&r.home>r.away)||(p.result==='away'&&r.home<r.away)||(p.result==='draw'&&r.home===r.away);const cs=p.homeScore==r.home&&p.awayScore==r.away;if(cs){pts+=3;cc++}else if(cr){pts+=1;cc++}}})
+  cm.innerHTML=`<div class="name-show">👋<b>${N}</b></div><div class="stats-row"><div class="stat-card"><span class="stat-num">${pm.length}</span><span class="stat-label">已猜</span></div><div class="stat-card"><span class="stat-num">${cc}</span><span class="stat-label">对</span></div><div class="stat-card"><span class="stat-num">${pts}</span><span class="stat-label">得分</span></div></div>`+
+    '<div class="date-bar"><span class="date-text">记录</span></div>'+
+    pm.map(m=>{const p=P[m.id],r=R[m.id];let s='';if(r){const cr=(p.result==='home'&&r.home>r.away)||(p.result==='away'&&r.home<r.away)||(p.result==='draw'&&r.home===r.away);const cs=p.homeScore==r.home&&p.awayScore==r.away;s=cs?'<span class="status-win">+3</span>':cr?'<span class="status-win">+1</span>':'<span style="color:#d45040;font-size:11px">+0</span>'}else s='<span class="status-pending">待定</span>';return`<div class="pick-item"><span class="pick-match">${m.homeFlag}${m.home}vs${m.away}${m.awayFlag}<br><small style="color:#5a5248">${m.date}</small></span><span class="pick-guess">${p.result==='home'?m.home:p.result==='away'?m.away:'平'}${p.homeScore!==''&&p.homeScore!==null&&p.homeScore!==undefined?' '+p.homeScore+':'+p.awayScore:''}${s}</span></div>`}).join('')
 }
 
-function RA(){
- if(!N){ck.innerHTML='<div class="empty-state">请先在竞猜页面输入昵称</div>';return}
- const pts=Object.keys(P).length
- ck.innerHTML=`<div class="rank-item"><span class="rank-num r1">1</span><span class="rank-name">${N}</span><span class="rank-score">${pts}分</span></div><div class="empty-state" style="padding:20px">📋 多人排行需后端支持<br>当前为个人模式</div>`
+async function RA(){
+  if(!N){ck.innerHTML='<div class="empty-state">请先输入昵称</div>';return}
+  await loadRK()
+  if(!rk.length){ck.innerHTML='<div class="empty-state">暂无数据</div>';return}
+  ck.innerHTML=`<div class="stats-row"><div class="stat-card"><span class="stat-num">${rk.length}</span><span class="stat-label">参赛</span></div></div>`+
+    rk.map((u,i)=>{const c=i===0?' r1':i===1?' r2':i===2?' r3':'';return`<div class="rank-item"><span class="rank-num${c}">${i+1}</span><span class="rank-name">${u.name}</span><span class="rank-score">${u.points}分</span></div>`}).join('')
 }
 
-I()
+setTimeout(()=>I(),100)
 </script>
 </body>
 </html>
