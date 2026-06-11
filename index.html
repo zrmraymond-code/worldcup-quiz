@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>🏆 世界杯竞猜</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Helvetica Neue',sans-serif;background:#0c0b09;color:#ede7df;min-height:100vh;-webkit-font-smoothing:antialiased}
+/* Header */
+.header{background:#100e0c;padding:16px;border-bottom:1px solid #1e1c18;text-align:center}
+.header h1{font-size:20px;font-weight:700;color:#e89820;margin-bottom:4px}
+.header p{font-size:13px;color:#7a7268}
+/* Tabs */
+.tabs{display:flex;border-bottom:1px solid #1e1c18;background:#100e0c;position:sticky;top:0;z-index:10}
+.tab{flex:1;text-align:center;padding:12px;font-size:14px;color:#7a7268;border-bottom:2px solid transparent;cursor:pointer}
+.tab.active{color:#e89820;border-bottom-color:#e89820}
+/* Content */
+.content{padding:12px;max-width:600px;margin:0 auto}
+/* Date header */
+.date-header{font-size:14px;font-weight:600;color:#e89820;padding:12px 0 8px;margin-top:8px;border-bottom:1px solid #1e1c18}
+/* Match card */
+.match-card{background:#12100e;border-radius:12px;padding:14px;margin-bottom:10px}
+.match-stage{font-size:11px;color:#5a5248;margin-bottom:6px}
+.match-teams{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.team{font-size:15px;font-weight:600;text-align:center;flex:1}
+.team-home{text-align:left;padding-right:8px}
+.team-away{text-align:right;padding-left:8px}
+.vs{font-size:14px;color:#5a5248;margin:0 8px;flex-shrink:0}
+.match-time{font-size:12px;color:#5a5248;margin-bottom:8px}
+/* Pick buttons */
+.pick-row{display:flex;gap:6px;margin-bottom:8px}
+.pick-btn{flex:1;padding:8px;border:1px solid #1e1c18;border-radius:8px;background:transparent;color:#7a7268;font-size:13px;cursor:pointer;text-align:center}
+.pick-btn.selected{background:rgba(232,152,32,0.15);border-color:#e89820;color:#e89820}
+.pick-btn.result-win{background:rgba(60,184,120,0.15);border-color:#3cb878;color:#3cb878}
+.pick-btn.result-draw{background:rgba(232,152,32,0.1);border-color:#7a7268;color:#7a7268}
+.pick-btn.result-lose{background:rgba(212,80,64,0.15);border-color:#d45040;color:#d45040}
+/* Score input */
+.score-row{display:flex;align-items:center;justify-content:center;gap:8px}
+.score-input{width:40px;height:36px;background:#1e1c18;border:1px solid #2a2824;border-radius:6px;color:#ede7df;text-align:center;font-size:15px}
+.score-input:focus{outline:1px solid #e89820}
+.score-row .vs-sm{font-size:13px;color:#5a5248}
+/* Result display */
+.result-badge{text-align:center;font-size:15px;color:#3cb878;font-weight:600}
+/* Stats */
+.stats-row{display:flex;gap:12px;margin-bottom:12px}
+.stat-card{flex:1;background:#12100e;border-radius:10px;padding:12px;text-align:center}
+.stat-num{font-size:22px;font-weight:700;color:#e89820;display:block}
+.stat-label{font-size:12px;color:#7a7268;margin-top:2px}
+/* Leaderboard */
+.rank-item{display:flex;align-items:center;background:#12100e;border-radius:10px;padding:12px;margin-bottom:6px;gap:12px}
+.rank-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;background:#1e1c18;color:#e89820;flex-shrink:0}
+.rank-1{background:linear-gradient(135deg,#e89820,#c47a10);color:#fff}
+.rank-2{background:#2a2824;color:#ede7df}
+.rank-3{background:#1e1c18;color:#b8b0a4}
+.rank-name{flex:1;font-size:14px;font-weight:600}
+.rank-score{font-size:16px;font-weight:700;color:#e89820}
+/* Pick list in "我的竞猜" */
+.pick-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid #1e1c18;font-size:13px}
+.pick-item:last-child{border:none}
+.pick-match{flex:1;color:#ede7df}
+.pick-guess{color:#e89820}
+.pick-status{color:#3cb878;font-size:12px;margin-left:8px}
+.pick-pending{color:#5a5248}
+/* Name input */
+.name-input-wrap{padding:12px 0;display:flex;gap:8px}
+.name-input{flex:1;background:#12100e;border:1px solid #1e1c18;border-radius:8px;padding:10px 12px;color:#ede7df;font-size:14px}
+.name-save{background:#e89820;color:#fff;border:none;border-radius:8px;padding:10px 16px;font-size:14px;cursor:pointer}
+/* Empty */
+.empty-state{text-align:center;padding:40px 0;color:#7a7268;font-size:14px}
+/* Alert */
+.alert{position:fixed;top:60px;left:50%;transform:translateX(-50%);background:#12100e;color:#ede7df;padding:10px 20px;border-radius:8px;font-size:13px;z-index:100;border:1px solid #e89820;box-shadow:0 4px 20px rgba(0,0,0,0.5);opacity:0;transition:opacity .3s;pointer-events:none}
+.alert.show{opacity:1}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🏆 世界杯竞猜 2026</h1>
+  <p>猜胜负得分，猜比分大涨分</p>
+</div>
+
+<div class="tabs">
+  <div class="tab active" data-tab="matches" onclick="switchTab('matches')">比赛</div>
+  <div class="tab" data-tab="my" onclick="switchTab('my')">我的竞猜</div>
+  <div class="tab" data-tab="rank" onclick="switchTab('rank')">排行榜</div>
+</div>
+
+<div id="name-section" class="content" style="display:none">
+  <div class="name-input-wrap">
+    <input class="name-input" id="name-input" placeholder="输入你的昵称" maxlength="20">
+    <button class="name-save" onclick="saveName()">保存</button>
+  </div>
+</div>
+
+<div id="content-matches" class="content"></div>
+<div id="content-my" class="content" style="display:none"></div>
+<div id="content-rank" class="content" style="display:none"></div>
+
+<div id="alert" class="alert"></div>
+
+<script>
+// ========== DATA ==========
+const STORAGE_KEY = 'wc_picks'
+const NAME_KEY = 'wc_name'
+
+let matches = []
+let allPicks = {}
+
+// ========== INIT ==========
+async function init() {
+  try {
+    const res = await fetch('matches.json?' + Date.now())
+    matches = await res.json()
+  } catch {
+    document.getElementById('content-matches').innerHTML = '<div class="empty-state">加载比赛数据失败，请刷新页面</div>'
+    return
+  }
+
+  loadPicks()
+  checkName()
+  renderMatches()
+}
+
+// ========== PICKS ==========
+function loadPicks() {
+  try { allPicks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {} } catch { allPicks = {} }
+}
+
+function savePick(matchId, result, homeScore, awayScore) {
+  allPicks[matchId] = { result, homeScore, awayScore }
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(allPicks))
+  showAlert('已保存')
+  renderMyPicks()
+  renderRanking()
+}
+
+function getPick(matchId) { return allPicks[matchId] || null }
+
+// ========== NAME ==========
+function checkName() {
+  const name = localStorage.getItem(NAME_KEY)
+  if (name) {
+    document.getElementById('name-section').style.display = 'none'
+  } else {
+    document.getElementById('name-section').style.display = 'block'
+  }
+}
+
+function saveName() {
+  const name = document.getElementById('name-input').value.trim()
+  if (!name) { showAlert('请输入昵称'); return }
+  localStorage.setItem(NAME_KEY, name)
+  document.getElementById('name-section').style.display = 'none'
+  renderRanking()
+  showAlert('昵称已保存')
+}
+
+// ========== TABS ==========
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'))
+  document.querySelector(`.tab[data-tab="${tab}"]`).classList.add('active')
+  document.getElementById('content-matches').style.display = tab === 'matches' ? 'block' : 'none'
+  document.getElementById('content-my').style.display = tab === 'my' ? 'block' : 'none'
+  document.getElementById('content-rank').style.display = tab === 'rank' ? 'block' : 'none'
+  if (tab === 'my') renderMyPicks()
+  if (tab === 'rank') renderRanking()
+}
+
+// ========== RENDER MATCHES ==========
+function renderMatches() {
+  const groups = {}
+  matches.forEach(m => {
+    const d = m.date
+    if (!groups[d]) groups[d] = []
+    groups[d].push(m)
+  })
+
+  let html = ''
+  Object.keys(groups).sort().forEach(date => {
+    html += `<div class="date-header">${date}</div>`
+    groups[date].forEach(m => html += renderMatchCard(m))
+  })
+
+  document.getElementById('content-matches').innerHTML = html || '<div class="empty-state">暂无比赛</div>'
+}
+
+function renderMatchCard(m) {
+  const p = getPick(m.id)
+  const sel = p ? p.result : ''
+  const hs = p ? p.homeScore : ''
+  const as = p ? p.awayScore : ''
+
+  return `
+    <div class="match-card" data-id="${m.id}">
+      <div class="match-stage">${m.stage} · ${m.time}</div>
+      <div class="match-teams">
+        <span class="team team-home">${m.home}</span>
+        <span class="vs">VS</span>
+        <span class="team team-away">${m.away}</span>
+      </div>
+      <div class="pick-row">
+        <div class="pick-btn ${sel==='home'?'selected':''}" onclick="pickResult(${m.id},'home')">${m.home} 胜</div>
+        <div class="pick-btn ${sel==='draw'?'selected':''}" onclick="pickResult(${m.id},'draw')">平</div>
+        <div class="pick-btn ${sel==='away'?'selected':''}" onclick="pickResult(${m.id},'away')">${m.away} 胜</div>
+      </div>
+      <div class="score-row">
+        <input class="score-input" type="number" min="0" max="20" value="${hs}" onchange="pickScore(${m.id},'home',this.value)" placeholder="0">
+        <span class="vs-sm">:</span>
+        <input class="score-input" type="number" min="0" max="20" value="${as}" onchange="pickScore(${m.id},'away',this.value)" placeholder="0">
+      </div>
+    </div>
+  `
+}
+
+function pickResult(id, result) {
+  const p = getPick(id) || { result: '', homeScore: '', awayScore: '' }
+  p.result = result
+  savePick(id, p.result, p.homeScore, p.awayScore)
+  // Re-render match cards to show updated selection
+  renderMatches()
+}
+
+function pickScore(id, side, val) {
+  const v = val === '' ? '' : parseInt(val) || 0
+  const p = getPick(id) || { result: '', homeScore: '', awayScore: '' }
+  if (side === 'home') p.homeScore = v
+  else p.awayScore = v
+  // Auto-detect result from score
+  if (p.homeScore !== '' && p.awayScore !== '' && p.homeScore > p.awayScore) p.result = 'home'
+  else if (p.homeScore !== '' && p.awayScore !== '' && p.homeScore < p.awayScore) p.result = 'away'
+  else if (p.homeScore !== '' && p.awayScore !== '' && p.homeScore === p.awayScore) p.result = 'draw'
+  savePick(id, p.result, p.homeScore, p.awayScore)
+}
+
+// ========== RENDER MY PICKS ==========
+function renderMyPicks() {
+  const keys = Object.keys(allPicks)
+  if (keys.length === 0) {
+    document.getElementById('content-my').innerHTML = '<div class="empty-state">你还没有竞猜任何比赛，去「比赛」页面猜一把吧</div>'
+    return
+  }
+
+  let totalPoints = 0
+  let html = '<div class="stats-row">'
+  html += `<div class="stat-card"><span class="stat-num">${keys.length}</span><span class="stat-label">已猜</span></div>`
+  const correct = countCorrect()
+  html += `<div class="stat-card"><span class="stat-num">${correct}</span><span class="stat-label">猜对</span></div>`
+  totalPoints = calcPoints()
+  html += `<div class="stat-card"><span class="stat-num">${totalPoints}</span><span class="stat-label">得分</span></div>`
+  html += '</div>'
+
+  html += '<div class="date-header">竞猜记录</div>'
+  matches.forEach(m => {
+    const p = getPick(m.id)
+    if (!p) return
+    html += `<div class="pick-item"><span class="pick-match">${m.home} vs ${m.away}</span><span class="pick-guess">${p.result === 'home' ? m.home : p.result === 'away' ? m.away : '平'}${p.homeScore !== '' ? ' ' + p.homeScore + ':' + p.awayScore : ''}</span></div>`
+  })
+
+  document.getElementById('content-my').innerHTML = html
+}
+
+// ========== RENDER RANKING ==========
+function renderRanking() {
+  const name = localStorage.getItem(NAME_KEY)
+  if (!name) {
+    document.getElementById('content-rank').innerHTML = '<div class="empty-state">请先在上方输入你的昵称</div>'
+    return
+  }
+
+  // Local only: show this user's score vs. placeholder
+  const points = calcPoints()
+  const correct = countCorrect()
+  const total = Object.keys(allPicks).length
+
+  let html = '<div class="stats-row">'
+  html += `<div class="stat-card"><span class="stat-num">${total}</span><span class="stat-label">竞猜场次</span></div>`
+  html += `<div class="stat-card"><span class="stat-num">${correct}</span><span class="stat-label">猜对结果</span></div>`
+  html += `<div class="stat-card"><span class="stat-num">${points}</span><span class="stat-label">总得分</span></div>`
+  html += '</div>'
+
+  html += '<div class="date-header">排行榜</div>'
+  html += '<div class="rank-item"><span class="rank-num rank-1">1</span><span class="rank-name">' + name + '</span><span class="rank-score">' + points + '分</span></div>'
+  html += '<div class="empty-state">📋 多用户排行版需后端支持，当前仅显示你的个人得分</div>'
+
+  document.getElementById('content-rank').innerHTML = html
+}
+
+// ========== SCORE CALC ==========
+function calcPoints() {
+  let pts = 0
+  matches.forEach(m => {
+    const p = getPick(m.id)
+    if (!p || !p.result) return
+    // Points for correct result only (no real results → count as 0)
+    // This is just total picks count (real results will be added later)
+  })
+  // Count all picks as 1 match guessed
+  return Object.keys(allPicks).length
+}
+
+function countCorrect() {
+  return 0 // No real match results yet
+}
+
+// ========== ALERT ==========
+function showAlert(msg) {
+  const el = document.getElementById('alert')
+  el.textContent = msg
+  el.classList.add('show')
+  setTimeout(() => el.classList.remove('show'), 2000)
+}
+
+// ========== START ==========
+init()
+</script>
+</body>
+</html>
